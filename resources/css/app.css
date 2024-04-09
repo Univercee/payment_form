@@ -100,7 +100,7 @@
     gap: 1rem;
     align-items: center;
     overflow-x: scroll;
-    max-width: 24rem;
+    max-width: 24.2rem;
 }
 
 .saved {
@@ -358,7 +358,7 @@
     opacity: .8;
 }
 
-@media only screen and (max-width: 562px) {
+@media only screen and (max-width: 598px) {
     .wrapper {
         width: 100%;
     }
@@ -371,6 +371,10 @@
         border: none;
         align-self: center;
         width: max-content;
+    }
+
+    .card__saved{
+        max-width: 100%;
     }
 
     .new_front, .new_back, .card__amount, .card__amount div, .card__terms {

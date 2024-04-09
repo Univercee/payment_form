@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-function Card({isValid, setIsValid}) {
-  const date = new Date()
+function Card({isValid, setIsValid, setCardData, cardData}) {
+  const date = new Date();
   const [number, setNumber] = useState("");
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
@@ -12,9 +12,29 @@ function Card({isValid, setIsValid}) {
   const [userMonthInput, setUserMonthInput] = useState(false);
 
   useEffect(()=>{
+    setNumber(cardData.number);
+    setYear(cardData.year - 2000 > 0?cardData.year - 2000:"");
+    setMonth(cardData.month);
+    setCvv(cardData.cvv);
+    setUserNumberInput(false);
+    setUserCvvInput(false);
+    setUserYearInput(false);
+    setUserMonthInput(false);
+  }, [cardData])
+
+  useEffect(()=>{
+      setCardData({
+        number: number,
+        year: parseInt(year)+2000,
+        month: month,
+        cvv: cvv,
+      })
+  }, [number, year, month, cvv])
+
+  useEffect(()=>{
     if(!userNumberInput) return;
     setIsValid({
-      number: isNumeric(number) && number.length == 16,
+      number: parseInt(number) && number.length == 16,
       year: isValid.year,
       month: isValid.month,
       cvv: isValid.cvv
@@ -26,8 +46,8 @@ function Card({isValid, setIsValid}) {
     let card_date = new Date(parseInt(year)+2000, month)
     setIsValid({
       number: isValid.number,
-      year: isNumeric(year) && year >= date.getFullYear()-2000 && date<card_date,
-      month: isNumeric(month) && month >= 1 && month <= 12 && date<card_date,
+      year: parseInt(year) && year >= date.getFullYear()-2000 && date<card_date,
+      month: parseInt(month) && month >= 1 && month <= 12 && date<card_date,
       cvv: isValid.cvv
     })
   }, [month, year])
@@ -38,7 +58,7 @@ function Card({isValid, setIsValid}) {
       number: isValid.number,
       year: isValid.year,
       month: isValid.month,
-      cvv: isNumeric(cvv) && cvv.length == 3
+      cvv: parseInt(cvv) && cvv.toString().length == 3
     })
   }, [cvv])
 
@@ -46,17 +66,17 @@ function Card({isValid, setIsValid}) {
     let value = e.target.value;
     if(value.length > 0){
       let lastChar = value.substr(value.length - 1)
-      if(!isNumeric(lastChar)){
+      if(!parseInt(lastChar)){
         e.preventDefault();
       }
       else{
         if(!userCvvInput) setUserCvvInput(true);
-        setCvv(value)
+        setCvv(isNaN(value)?'':value);
       }
     }
     else {
       if(!userCvvInput) setUserCvvInput(true);
-      setCvv(value)
+      setCvv(isNaN(value)?'':value);
     }
   }
 
@@ -64,7 +84,7 @@ function Card({isValid, setIsValid}) {
     let value = e.target.value;
     if(value.length > 0){
       let lastChar = value.substr(value.length - 1)
-      if(!isNumeric(lastChar)){
+      if(!parseInt(lastChar)){
         e.preventDefault();
       }
       else{
@@ -82,7 +102,7 @@ function Card({isValid, setIsValid}) {
     let value = e.target.value;
     if(value.length > 0){
       let lastChar = value.substr(value.length - 1)
-      if(!isNumeric(lastChar) || value < 1 || value > 12){
+      if(!parseInt(lastChar) || value < 1 || value > 12){
         e.preventDefault();
       }
       else{
@@ -100,7 +120,7 @@ function Card({isValid, setIsValid}) {
     let value = e.target.value;
     if(value.length > 0){
       let lastChar = value.substr(value.length - 1)
-      if(!isNumeric(lastChar) || value.length > 16){
+      if(!parseInt(lastChar) || value.length > 16){
         e.preventDefault();
       }
       else{
@@ -114,9 +134,6 @@ function Card({isValid, setIsValid}) {
     }
   }
 
-  function isNumeric(value) {
-    return /^\d+$/.test(value);
-  }
 
   return (
     <>
