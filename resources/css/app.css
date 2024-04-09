@@ -5,6 +5,11 @@
     margin-top: 2rem;
 }
 
+.error, .terms_input.error{
+    border-color:red !important;
+}
+
+
 
 .card {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -71,7 +76,6 @@
     width: 100%;
     padding: 1rem;
     font-size: 1rem;
-
 }
 
 .amount svg {
@@ -81,12 +85,12 @@
     right: 1rem;
 }   
 
-.amount_rub {
-    border-radius: 0 .5rem .5rem 0;
+.amount_rub, .amount_rub input{
+    border-radius: 0 .5rem .5rem 0 !important;
 }
 
-.amount_usd {
-    border-radius: .5rem 0 0 .5rem;
+.amount_usd, .amount_usd input{
+    border-radius: .5rem 0 0 .5rem !important; 
 }
 
 
@@ -95,6 +99,8 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    overflow-x: scroll;
+    max-width: 24rem;
 }
 
 .saved {
@@ -106,7 +112,7 @@
 }
 
 .saved_existed {
-    width: 7.25rem;
+    min-width: 7.25rem;
     height: 80px;
     justify-content: end;
     align-items: start;
@@ -424,4 +430,19 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 1px;
+    height: 7px;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #C7C9D9;
+    border-radius: 1px;
+    cursor: pointer;
+    border-radius: 10px;
 }
