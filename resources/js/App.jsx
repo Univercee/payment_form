@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Amount from './components/Amount';
 import Card from './components/Card';
 import Cards from './components/Cards';
-import Terms from './components/Terms';
+import SaveCardForm from './components/SaveCardForm';
 import './bootstrap';
 import axios from 'axios';
 
@@ -14,7 +14,8 @@ function App() {
     cvv: ''
   })
   const [amountIsValid, setAmountIsValid] = useState(true);
-  const [termsIsValid, setTermsIsValid] = useState(true);
+  const [amountValueUsd, setAmountValueUsd] = useState('');
+  const [saveCard, setSaveCard] = useState(false);
   const [cardIsValid, setCardIsValid] = useState({
     number: true,
     year: true,
@@ -29,7 +30,10 @@ function App() {
       is_valid = is_valid && value;
     })
     if(is_valid){
-      axios.post('/api/card', cardData)
+      axios.post('/api/card', {
+        card: cardData,
+        save: saveCard
+      })
       .then((response)=>{
         clear();
         alert("Success!")
@@ -45,6 +49,17 @@ function App() {
   }
 
   function clear(){
+    setSaveCard(false);
+    setAmountValueUsd('');
+    setCardData({
+      number: '',
+      year: '',
+      month: '',
+      cvv: ''
+    });
+  }
+
+  function clearCard(){
     setCardData({
       number: '',
       year: '',
@@ -59,10 +74,10 @@ function App() {
         <h1>Пополнить банковской картой</h1>
 
         <div className='card__body'>
-          <Amount isValid={amountIsValid} setIsValid={setAmountIsValid}></Amount>
-          <Cards setCardData={setCardData} clear={clear}></Cards>
+          <Amount amountValueUsd={amountValueUsd} setAmountValueUsd={setAmountValueUsd} isValid={amountIsValid} setIsValid={setAmountIsValid}></Amount>
+          <Cards setCardData={setCardData} clear={clearCard}></Cards>
           <Card isValid={cardIsValid} setIsValid={setCardIsValid} setCardData={setCardData} cardData={cardData}></Card>
-          <Terms isValid={termsIsValid} setIsValid={setTermsIsValid}></Terms>
+          <SaveCardForm saveCard={saveCard} setSaveCard={setSaveCard}></SaveCardForm>
         </div>
 
         <input className='card__submit' type="submit" value={"Оплатить"} />

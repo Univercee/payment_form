@@ -1,25 +1,31 @@
 import { useEffect, useState } from 'react';
 
-function Amount({isValid, setIsValid}) {
+function Amount({isValid, setIsValid, amountValueUsd, setAmountValueUsd }) {
   const [amountUsd, setAmountUsd] = useState("");
   const [amountRub, setAmountRub] = useState("");
   const [userInput, setUserInput] = useState(false);
 
   useEffect(()=>{
-    if(userInput){
-      setIsValid(amountUsd > 0 && amountRub > 0)
-    }
+    setAmountByUsd(amountValueUsd);
+    setUserInput(false);
+  }, [amountValueUsd])
+
+  useEffect(()=>{
+    if(!userInput) return;
+    setIsValid(amountUsd > 0 && amountRub > 0)
   }, [amountUsd, amountRub])
 
   function setAmountByRub(rub){
     setAmountRub(rub);
     let usd = rub?(rub/15).toFixed(2):"";
     setAmountUsd(usd);
+    setAmountValueUsd(usd);
     if(!userInput) setUserInput(true);
   }
 
   function setAmountByUsd(usd){
     setAmountUsd(usd);
+    setAmountValueUsd(usd);
     let rub = usd?(usd*15).toFixed(2):"";
     setAmountRub(rub);
     if(!userInput) setUserInput(true);

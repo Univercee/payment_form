@@ -20,10 +20,12 @@ class CardController extends Controller
         $date = date("Y-m-d");
         $data = $request->all();        
 
-        $card_number = $data['number'];
-        $card_year = $data['year'];
-        $card_month = $data['month'];
-        $card_cvv = $data['cvv'];
+        $card_number = $data['card']['number'];
+        $card_year = $data['card']['year'];
+        $card_month = $data['card']['month'];
+        $card_cvv = $data['card']['cvv'];
+        $save_card = $data['save'];
+
         $card_date = "$card_year-$card_month-1";
         $existed_card = Card::where('number', $card_number)->first();
         if(!is_numeric($card_number) || strlen($card_number) != 16){
@@ -36,18 +38,20 @@ class CardController extends Controller
             $errors['cvv'] = 'Incorrect card CVV';
         }
         
-        if($existed_card){
-            if($existed_card->year != $card_year || $existed_card->month != $card_month || $existed_card->cvv != $card_cvv){
-                $errors['card'] = 'Card with the same number already exists';
+        if($save_card){
+            if($existed_card){
+                if($existed_card->year != $card_year || $existed_card->month != $card_month || $existed_card->cvv != $card_cvv){
+                    $errors['card'] = 'Card with the same number already exists';
+                }
             }
-        }
-        else{
-            $card = new Card();
-            $card->number = $card_number;
-            $card->year = $card_year;
-            $card->month = $card_month;
-            $card->cvv = $card_cvv;
-            $card->save();
+            else{
+                $card = new Card();
+                $card->number = $card_number;
+                $card->year = $card_year;
+                $card->month = $card_month;
+                $card->cvv = $card_cvv;
+                $card->save();
+            }
         }
 
         if(!empty($errors)){

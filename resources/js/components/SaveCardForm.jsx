@@ -1,25 +1,13 @@
-import { useState } from 'react';
-
-function Terms() {
-  const [terms, setTerms] = useState("");
-  const [userInput, setUserInput] = useState(false)
-
-  function updateTerms(value){
-    if(!userInput) setUserInput(true);
-    setTerms(value)
-  }
-
+function SaveCardForm({saveCard, setSaveCard}) {
   return (
     <>
       <div className='card__terms'>
         <input
-          className={'terms terms_input ' + (!terms&&userInput?"error":"") }
+          className={'terms terms_input '}
           type="checkbox"
-          name="terms"
-          value={terms}
-          onChange={(e) => updateTerms(e.target.checked)}
-          id=""
-          required
+          name="save"
+          checked={saveCard}
+          onChange={(e) => setSaveCard(e.target.checked)}
         />
         <div className='terms terms_text'>
           <p>
@@ -37,4 +25,4 @@ function Terms() {
   )
 }
 
-export default Terms
+export default SaveCardForm
