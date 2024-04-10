@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Amount from './components/Amount';
 import Card from './components/Card';
 import Cards from './components/Cards';
@@ -16,6 +16,7 @@ function App() {
   const [amountIsValid, setAmountIsValid] = useState(true);
   const [amountValueUsd, setAmountValueUsd] = useState('');
   const [saveCard, setSaveCard] = useState(false);
+  const [refreshData, setRefreshData] = useState(false);
   const [cardIsValid, setCardIsValid] = useState({
     number: true,
     year: true,
@@ -29,13 +30,14 @@ function App() {
     Object.values(cardIsValid).forEach(value=>{
       is_valid = is_valid && value;
     })
-    if(is_valid){
+    if(is_valid && amountIsValid){
       axios.post('/api/card', {
         card: cardData,
         save: saveCard
       })
       .then((response)=>{
         clear();
+        setRefreshData(true);
         alert("Success!")
       })
       .catch(err=>{
@@ -75,7 +77,7 @@ function App() {
 
         <div className='card__body'>
           <Amount amountValueUsd={amountValueUsd} setAmountValueUsd={setAmountValueUsd} isValid={amountIsValid} setIsValid={setAmountIsValid}></Amount>
-          <Cards setCardData={setCardData} clear={clearCard}></Cards>
+          <Cards setCardData={setCardData} clear={clearCard} refresh={refreshData}></Cards>
           <Card isValid={cardIsValid} setIsValid={setCardIsValid} setCardData={setCardData} cardData={cardData}></Card>
           <SaveCardForm saveCard={saveCard} setSaveCard={setSaveCard}></SaveCardForm>
         </div>

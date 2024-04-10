@@ -10,16 +10,27 @@ function Card({isValid, setIsValid, setCardData, cardData}) {
   const [userCvvInput, setUserCvvInput] = useState(false);
   const [userYearInput, setUserYearInput] = useState(false);
   const [userMonthInput, setUserMonthInput] = useState(false);
+  const [userInput, setUserInput] = useState(false);
 
   useEffect(()=>{
     setNumber(cardData.number);
     setYear(cardData.year - 2000 > 0?cardData.year - 2000:"");
     setMonth(cardData.month);
     setCvv(cardData.cvv);
-    setUserNumberInput(false);
-    setUserCvvInput(false);
-    setUserYearInput(false);
-    setUserMonthInput(false);
+    if(!userInput){
+      setIsValid({
+        number: true,
+        year: true,
+        month: true,
+        cvv: true
+      })
+      setUserNumberInput(false);
+      setUserCvvInput(false);
+      setUserYearInput(false);
+      setUserMonthInput(false);
+    }
+    setUserInput(false)
+    
   }, [cardData])
 
   useEffect(()=>{
@@ -29,12 +40,12 @@ function Card({isValid, setIsValid, setCardData, cardData}) {
         month: month,
         cvv: cvv,
       })
+      setUserInput(true);
   }, [number, year, month, cvv])
 
   useEffect(()=>{
-    if(!userNumberInput) return;
     setIsValid({
-      number: parseInt(number) && number.length == 16,
+      number: (parseInt(number) && number.length == 16) || !userNumberInput,
       year: isValid.year,
       month: isValid.month,
       cvv: isValid.cvv
@@ -42,23 +53,21 @@ function Card({isValid, setIsValid, setCardData, cardData}) {
   }, [number])
 
   useEffect(()=>{
-    if(!userMonthInput || !userYearInput) return;
     let card_date = new Date(parseInt(year)+2000, month)
     setIsValid({
       number: isValid.number,
-      year: parseInt(year) && year >= date.getFullYear()-2000 && date<card_date,
-      month: parseInt(month) && month >= 1 && month <= 12 && date<card_date,
+      year: (parseInt(year) && year >= date.getFullYear()-2000 && date<card_date) || !userYearInput,
+      month: (parseInt(month) && month >= 1 && month <= 12 && date<card_date) || !userMonthInput,
       cvv: isValid.cvv
     })
   }, [month, year])
 
   useEffect(()=>{
-    if(!userCvvInput) return;
     setIsValid({
       number: isValid.number,
       year: isValid.year,
       month: isValid.month,
-      cvv: parseInt(cvv) && cvv.toString().length == 3
+      cvv: (parseInt(cvv) && cvv.toString().length == 3) || !userCvvInput
     })
   }, [cvv])
 

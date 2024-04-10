@@ -1,13 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 
-function Cards({setCardData, clear}) {
+function Cards({setCardData, clear, refresh}) {
   const [cards, setCards] = useState([]);
+
   useEffect(()=>{
     axios.get('/api/cards').then((response)=>{
       setCards(response.data)
     })
   }, []);
+
+  useEffect(()=>{
+    if(refresh){
+      axios.get('/api/cards').then((response)=>{
+        setCards(response.data)
+      })
+    }
+  }, [refresh]);
 
   function setData(number){
     let data = cards.filter((card)=>{
